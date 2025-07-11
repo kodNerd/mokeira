@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4 mt-3 pt-2">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Injections</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInjectionModal">
+            <i class="bi bi-plus-circle me-1"></i> Add Injection
+        </button>
+    </div>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Source</th>
+                    <th>Staff</th>
+                    <th style="width: 120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for injection in injections %}
+                <tr>
+                    <td>{{ injection.description }}</td>
+                    <td>KES {{ injection.amount }}</td>
+                    <td>{{ injection.date }}</td>
+                    <td>{{ injection.source|default:'-' }}</td>
+                    <td>{{ injection.staff|default:'-' }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#editInjectionModal" 
+                            data-id="{{ injection.id }}" data-description="{{ injection.description }}" data-amount="{{ injection.amount }}" data-source="{{ injection.source }}" data-staff="{{ injection.staff }}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteInjectionModal" 
+                            data-id="{{ injection.id }}" data-description="{{ injection.description }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted">No injections recorded yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Injection Modal -->
+<div class="modal fade" id="addInjectionModal" tabindex="-1" aria-labelledby="addInjectionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'pos:injection_add' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addInjectionModalLabel">Add Injection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="addDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="addDescription" name="description" required>
+          </div>
+          <div class="mb-3">
+            <label for="addAmount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="addAmount" name="amount" min="0" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label for="addSource" class="form-label">Source <span class="text-muted">(optional)</span></label>
+            <input type="text" class="form-control" id="addSource" name="source">
+          </div>
+          <div class="mb-3">
+            <label for="addStaff" class="form-label">Staff <span class="text-muted">(optional)</span></label>
+            <input type="text" class="form-control" id="addStaff" name="staff">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Injection</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Injection Modal -->
+<div class="modal fade" id="editInjectionModal" tabindex="-1" aria-labelledby="editInjectionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="editInjectionForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editInjectionModalLabel">Edit Injection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editInjectionId" name="id">
+          <div class="mb-3">
+            <label for="editDescription" class="form-label">Description</label>
+            <input type="text" class="form-control" id="editDescription" name="description" required>
+          </div>
+          <div class="mb-3">
+            <label for="editAmount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="editAmount" name="amount" min="0" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label for="editSource" class="form-label">Source <span class="text-muted">(optional)</span></label>
+            <input type="text" class="form-control" id="editSource" name="source">
+          </div>
+          <div class="mb-3">
+            <label for="editStaff" class="form-label">Staff <span class="text-muted">(optional)</span></label>
+            <input type="text" class="form-control" id="editStaff" name="staff">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Injection Modal -->
+<div class="modal fade" id="deleteInjectionModal" tabindex="-1" aria-labelledby="deleteInjectionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="deleteInjectionForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteInjectionModalLabel">Delete Injection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="deleteInjectionId" name="id">
+          <p>Are you sure you want to delete <span id="deleteInjectionDescription" class="fw-bold"></span>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Populate Edit Injection Modal
+var editInjectionModal = document.getElementById('editInjectionModal');
+editInjectionModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget;
+  var id = button.getAttribute('data-id');
+  var description = button.getAttribute('data-description');
+  var amount = button.getAttribute('data-amount');
+  var source = button.getAttribute('data-source');
+  var staff = button.getAttribute('data-staff');
+  document.getElementById('editInjectionId').value = id;
+  document.getElementById('editDescription').value = description;
+  document.getElementById('editAmount').value = amount;
+  document.getElementById('editSource').value = source || '';
+  document.getElementById('editStaff').value = staff || '';
+  document.getElementById('editInjectionForm').action = `/injections/${id}/edit/`;
+});
+// Populate Delete Injection Modal
+var deleteInjectionModal = document.getElementById('deleteInjectionModal');
+deleteInjectionModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget;
+  var id = button.getAttribute('data-id');
+  var description = button.getAttribute('data-description');
+  document.getElementById('deleteInjectionId').value = id;
+  document.getElementById('deleteInjectionDescription').textContent = description;
+  document.getElementById('deleteInjectionForm').action = `/injections/${id}/delete/`;
+});
+</script>
+{% endblock %} 

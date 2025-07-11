@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-3">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">Delete Product</h4>
+        <p>Are you sure you want to delete <strong>{{ stock.product_name }}</strong> from inventory?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'pos:inventory' %}" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %} 

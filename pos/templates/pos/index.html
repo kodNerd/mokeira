@@ -1,0 +1,1253 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #6e00ff;
+        --secondary: #ff6b00;
+        --tertiary: #ff0033;
+        --dark: #1a1a2e;
+        --light: #f8f9fa;
+        --gradient-primary: linear-gradient(45deg, var(--primary), var(--secondary));
+        --gradient-secondary: linear-gradient(135deg, var(--secondary), var(--tertiary));
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+    
+    /* Enhanced responsive breakpoints */
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: 80vh;
+            padding: 2rem 0;
+        }
+        
+        .display-3 {
+            font-size: 2.5rem;
+        }
+        
+        .counter {
+            font-size: 2rem;
+        }
+        
+        .pain-point-card {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-section {
+            min-height: 70vh;
+            padding: 1rem 0;
+        }
+        
+        .display-3 {
+            font-size: 2rem;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Particle.js container with responsive adjustments */
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+    
+    @media (max-width: 768px) {
+        #particles-js {
+            display: none; /* Hide particles on mobile for better performance */
+        }
+    }
+    
+    .hero-section {
+        min-height: 100vh;
+        background: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+        background-size: cover;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(26, 26, 46, 0.85);
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Enhanced glitch effect with responsive adjustments */
+    .glitch {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+    }
+    
+    .glitch::before {
+        color: var(--tertiary);
+        animation: glitch-effect 3s infinite;
+        clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    }
+    
+    .glitch::after {
+        color: var(--secondary);
+        animation: glitch-effect 2s infinite reverse;
+        clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    }
+    
+    @keyframes glitch-effect {
+        0% { transform: translate(0); }
+        20% { transform: translate(-3px, 3px); }
+        40% { transform: translate(-3px, -3px); }
+        60% { transform: translate(3px, 3px); }
+        80% { transform: translate(3px, -3px); }
+        100% { transform: translate(0); }
+    }
+    
+    /* Elegant subtle pulse effect replacing neon glow */
+    .elegant-pulse {
+        animation: elegant-pulse 3s ease-in-out infinite;
+        position: relative;
+    }
+    
+    .elegant-pulse::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-primary);
+        opacity: 0;
+        border-radius: inherit;
+        animation: elegant-pulse-bg 3s ease-in-out infinite;
+        z-index: -1;
+    }
+    
+    @keyframes elegant-pulse {
+        0%, 100% { 
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% { 
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+    }
+    
+    @keyframes elegant-pulse-bg {
+        0%, 100% { 
+            opacity: 0;
+            transform: scale(1);
+        }
+        50% { 
+            opacity: 0.1;
+            transform: scale(1.1);
+        }
+    }
+    
+    /* Enhanced pain point cards with 3D effect and responsive design */
+    .pain-point-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+        transform: perspective(1000px);
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+    }
+    
+    .pain-point-card:hover {
+        transform: perspective(1000px) rotateX(10deg) rotateY(10deg) translateY(-20px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(110, 0, 255, 0.5);
+    }
+    
+    .pain-point-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .pain-point-card:hover::before {
+        left: 100%;
+    }
+    
+    .pain-point-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-primary);
+        opacity: 0;
+        transition: opacity 0.5s;
+        z-index: -1;
+        border-radius: inherit;
+    }
+    
+    .pain-point-card:hover::after {
+        opacity: 0.3;
+    }
+    
+    /* Enhanced futuristic buttons with responsive design */
+    .btn-future {
+        background: var(--gradient-primary);
+        border: none;
+        font-weight: bold;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(110, 0, 255, 0.3);
+    }
+    
+    .btn-future::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.5s;
+    }
+    
+    .btn-future:hover::before {
+        left: 100%;
+    }
+    
+    .btn-future:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(110, 0, 255, 0.5);
+    }
+    
+    .btn-future:active {
+        transform: translateY(-2px) scale(1.02);
+    }
+    
+    /* Enhanced feature counter animation */
+    .counter {
+        font-size: 3rem;
+        font-weight: bold;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+    }
+    
+    .counter::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 3px;
+        background: var(--gradient-primary);
+        transition: width 0.5s ease;
+    }
+    
+    .counter.animate::after {
+        width: 100%;
+    }
+    
+    /* Enhanced floating elements */
+    .float-element {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+    
+    /* Enhanced section dividers */
+    .wave-divider {
+        position: relative;
+        height: 100px;
+        overflow: hidden;
+    }
+    
+    .wave-divider svg {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* New interactive elements */
+    .interactive-badge {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .interactive-badge:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 5px 15px rgba(255, 107, 0, 0.5);
+    }
+    
+    /* Enhanced testimonial cards */
+    .testimonial-card {
+        transition: all 0.5s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: var(--primary);
+    }
+    
+    /* Scroll-triggered animations */
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease;
+    }
+    
+    .fade-in-up.animate {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .fade-in-left {
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 0.8s ease;
+    }
+    
+    .fade-in-left.animate {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .fade-in-right {
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.8s ease;
+    }
+    
+    .fade-in-right.animate {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .scale-in {
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.8s ease;
+    }
+    
+    .scale-in.animate {
+        opacity: 1;
+        transform: scale(1);
+    }
+    
+    /* Enhanced parallax section */
+    .parallax-section {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+    
+    .parallax-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(26, 26, 46, 0.7);
+        z-index: 1;
+    }
+    
+    .parallax-section .container {
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Mobile-specific parallax fix */
+    @media (max-width: 768px) {
+        .parallax-section {
+            background-attachment: scroll;
+        }
+    }
+    
+    /* Enhanced floating action button */
+    .floating-action-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+    
+    .floating-action-btn:hover {
+        transform: scale(1.1) rotate(10deg);
+    }
+    
+    /* Enhanced animated circles background */
+    .circle-1, .circle-2, .circle-3 {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        opacity: 0.1;
+        animation: float 8s ease-in-out infinite;
+    }
+    
+    .circle-1 {
+        width: 200px;
+        height: 200px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+    
+    .circle-2 {
+        width: 150px;
+        height: 150px;
+        top: 60%;
+        right: 10%;
+        animation-delay: 2s;
+    }
+    
+    .circle-3 {
+        width: 100px;
+        height: 100px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+    
+    /* Enhanced text gradient */
+    .text-gradient {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Enhanced navbar responsiveness and mobile toggle fixes */
+    @media (max-width: 768px) {
+        .navbar-brand {
+            font-size: 1.2rem;
+        }
+        
+        .navbar-nav {
+            text-align: center;
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Remove outline on mobile toggle */
+        .navbar-toggler:focus {
+            box-shadow: none;
+            outline: none;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    }
+    
+    /* Enhanced loading animation */
+    .loading-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--dark);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+    }
+    
+    .loading-animation.fade-out {
+        opacity: 0;
+        pointer-events: none;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(110, 0, 255, 0.3);
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Enhanced hover effects for images */
+    .hero-image {
+        transition: all 0.5s ease;
+        border: 3px solid var(--primary);
+    }
+    
+    .hero-image:hover {
+        transform: rotate3d(1, 1, 0, 20deg) scale(1.05);
+        box-shadow: 0 20px 40px rgba(110, 0, 255, 0.5);
+    }
+    
+    /* Enhanced mobile menu */
+    .mobile-menu-toggle {
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-menu-toggle:hover {
+        transform: scale(1.1);
+    }
+    
+    /* Enhanced scroll indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateX(-50%) translateY(0);
+        }
+        40% {
+            transform: translateX(-50%) translateY(-10px);
+        }
+        60% {
+            transform: translateX(-50%) translateY(-5px);
+        }
+    }
+    
+    /* Elegant subtle animations for badges */
+    .elegant-badge {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .elegant-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .elegant-badge:hover::before {
+        left: 100%;
+    }
+    
+    .elegant-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Animation -->
+<div class="loading-animation" id="loadingAnimation">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Particle.js background -->
+<div id="particles-js"></div>
+<div class="hero-section" id="hero">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6 fade-in-left">
+                <h1 class="display-3 fw-bold mb-4">
+                    <span class="glitch text-gradient" data-text="MOKEIRA">MOKEIRA</span> 
+                    <span class="text-warning elegant-pulse">KIOSK</span>
+                </h1>
+                <p class="lead mb-5 fade-in-up" data-delay="0.2s">
+                    <span class="typed-text" data-typed-items='["Complete kiosk management platform", "Stock tracking with expiry alerts", "M-Pesa integration & digital payments", "Employee accountability & reporting", "Cloud backup & offline sync", "Multi-kiosk SaaS solution"]'></span>
+                </p>
+                
+                <div class="d-flex gap-3 flex-wrap fade-in-up" data-delay="0.4s">
+                    <a href="#" class="btn btn-future btn-lg px-4 py-3 rounded-pill">
+                        <i class="bi bi-lightning-charge-fill me-2"></i> GET STARTED
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill btn-hover-grow">
+                        <i class="bi bi-play-circle me-2"></i> WATCH DEMO
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block fade-in-right">
+                <div class="position-relative float-element">
+                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                         class="img-fluid rounded-4 shadow-lg hero-image" 
+                         alt="Mokeira POS in action">
+                    <div class="position-absolute top-0 start-0 translate-middle">
+                        <span class="badge bg-danger p-2 elegant-badge">LIVE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <i class="bi bi-chevron-down text-white" style="font-size: 2rem;"></i>
+    </div>
+</div>
+
+<!-- Wave divider -->
+<div class="wave-divider bg-dark">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
+              opacity=".25" fill="var(--primary)"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" 
+              opacity=".5" fill="var(--primary)"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" 
+              fill="var(--primary)"></path>
+    </svg>
+</div>
+
+<!-- Stats Counter Section -->
+<div class="py-5 bg-dark" id="stats">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-6">
+                <div class="counter scale-in" data-target="2500">0</div>
+                <p class="text-uppercase text-muted">Active Kiosks</p>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter scale-in" data-target="85000">0</div>
+                <p class="text-uppercase text-muted">Daily Transactions</p>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter scale-in" data-target="99">0</div>
+                <p class="text-uppercase text-muted">Uptime %</p>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter scale-in" data-target="98">0</div>
+                <p class="text-uppercase text-muted">Customer Satisfaction</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pain Points Section -->
+<div class="container py-5 my-5" id="pain">
+    <h2 class="text-center mb-5 fade-in-up">
+        Solving <span class="text-gradient">Real</span> Kenyan Kiosk Problems 
+        <span class="badge bg-danger elegant-badge">NOW</span>
+    </h2>
+    
+    <div class="row g-4">
+        <!-- Pain Point 1 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="0.1s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-box-seam text-danger" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Stock Management</h3>
+                <p>Real-time <strong class="text-warning">inventory tracking</strong> with expiry alerts, low stock warnings, and fast-moving item reports. Never run out of popular items again.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">EXPIRY TRACKING</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">AUTO-REORDER</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pain Point 2 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="0.3s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-cash-stack text-warning" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Cash Flow & Records</h3>
+                <p>Complete <strong class="text-warning">sales tracking</strong> with profit/loss analysis, customer credit management, and WhatsApp-shareable receipts.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">PROFIT TRACKING</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">CREDIT ALERTS</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pain Point 3 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="0.5s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-phone text-success" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Digital Payments</h3>
+                <p>Integrated <strong class="text-warning">M-Pesa STK Push</strong> with QR codes, automatic payment matching, and digital receipt generation.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">STK PUSH</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">QR PAYMENTS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Additional Pain Points Row -->
+    <div class="row g-4 mt-4">
+        <!-- Pain Point 4 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="0.7s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-truck text-info" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Supplier Management</h3>
+                <p>Track <strong class="text-warning">supplier relationships</strong>, order history, and reorder with one click. Compare prices across multiple suppliers.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">ONE-CLICK ORDER</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">PRICE COMPARE</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pain Point 5 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="0.9s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-people text-primary" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Employee Accountability</h3>
+                <p>Role-based <strong class="text-warning">access control</strong> with sales tracking per employee. Automatic end-of-day reports sent to owner.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">SALES TRACKING</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">AUTO REPORTS</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pain Point 6 -->
+        <div class="col-lg-4 col-md-6 fade-in-up" data-delay="1.1s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-graph-up text-success" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Business Insights</h3>
+                <p>Analytics <strong class="text-warning">dashboard</strong> with sales trends, top profitable items, and cash flow projections for growth planning.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark elegant-badge">SALES TRENDS</span>
+                    <span class="badge bg-dark ms-2 elegant-badge">PROFIT ANALYSIS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container py-5 my-5" id="features">
+    <h2 class="text-center mb-5 fade-in-up">
+        Complete <span class="text-gradient">SaaS Platform</span> for Kenyan Kiosks
+    </h2>
+    
+    <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-lg-6 fade-in-up" data-delay="0.1s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="d-flex align-items-start">
+                    <div class="icon-wrapper me-3">
+                        <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold">Cloud Backup & Security</h4>
+                        <p>Automatic daily sync to cloud with password-protected access. Never lose your business data again.</p>
+                        <div class="mt-2">
+                            <span class="badge bg-success elegant-badge">AUTO BACKUP</span>
+                            <span class="badge bg-success ms-2 elegant-badge">SECURE ACCESS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="col-lg-6 fade-in-up" data-delay="0.3s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="d-flex align-items-start">
+                    <div class="icon-wrapper me-3">
+                        <i class="bi bi-phone text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold">Mobile-First Design</h4>
+                        <p>Works perfectly on smartphones and tablets. Offline mode with local storage for power outages.</p>
+                        <div class="mt-2">
+                            <span class="badge bg-primary elegant-badge">OFFLINE MODE</span>
+                            <span class="badge bg-primary ms-2 elegant-badge">MOBILE OPTIMIZED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="col-lg-6 fade-in-up" data-delay="0.5s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="d-flex align-items-start">
+                    <div class="icon-wrapper me-3">
+                        <i class="bi bi-printer text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold">Bluetooth Printing</h4>
+                        <p>Print receipts directly to Bluetooth printers. Generate QR codes for easy payments.</p>
+                        <div class="mt-2">
+                            <span class="badge bg-warning elegant-badge">BLUETOOTH PRINT</span>
+                            <span class="badge bg-warning ms-2 elegant-badge">QR CODES</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="col-lg-6 fade-in-up" data-delay="0.7s">
+            <div class="pain-point-card p-4 rounded-4 h-100">
+                <div class="d-flex align-items-start">
+                    <div class="icon-wrapper me-3">
+                        <i class="bi bi-building text-info" style="font-size: 2rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold">Multi-Kiosk Management</h4>
+                        <p>Manage multiple kiosks from one dashboard. Perfect for growing businesses.</p>
+                        <div class="mt-2">
+                            <span class="badge bg-info elegant-badge">CENTRALIZED</span>
+                            <span class="badge bg-info ms-2 elegant-badge">SCALABLE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonial Section with Enhanced Parallax -->
+<div class="parallax-section py-5" id="testimonial">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="testimonial-card bg-dark bg-opacity-75 p-4 rounded-4">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle mb-3" width="80" alt="User">
+                                <h4 class="text-warning">Mama Shiro - Kiosk Owner</h4>
+                                <p class="lead">"The stock management feature saved me from losing money on expired goods. The expiry alerts are a game-changer!"</p>
+                                <div class="rating text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="testimonial-card bg-dark bg-opacity-75 p-4 rounded-4">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle mb-3" width="80" alt="User">
+                                <h4 class="text-warning">Juma - Mini-Supermarket</h4>
+                                <p class="lead">"Employee tracking helped me identify my best performers. The daily reports keep me informed even when I'm away!"</p>
+                                <div class="rating text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-half"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="testimonial-card bg-dark bg-opacity-75 p-4 rounded-4">
+                                <img src="https://randomuser.me/api/portraits/women/28.jpg" class="rounded-circle mb-3" width="80" alt="User">
+                                <h4 class="text-warning">Amina - Multi-Kiosk Owner</h4>
+                                <p class="lead">"Managing 3 kiosks from one dashboard is incredible. The analytics help me make smart business decisions!"</p>
+                                <div class="rating text-warning">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="bg-dark py-5 position-relative overflow-hidden">
+    <div class="container text-center position-relative z-index-1">
+        <h2 class="mb-4 fade-in-up">
+            Ready to <span class="text-gradient">Scale</span> Your Kiosk Business?
+        </h2>
+        <p class="lead mb-4 fade-in-up" data-delay="0.2s">
+            Start with basic stock management or go full SaaS with complete business automation
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap fade-in-up" data-delay="0.4s">
+            <a href="#" class="btn btn-future btn-lg px-4 py-3 rounded-pill">
+                <i class="bi bi-box-seam me-2"></i> BASIC PLAN
+            </a>
+            <a href="#" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill">
+                <i class="bi bi-lightning-charge-fill me-2"></i> PREMIUM PLAN
+            </a>
+        </div>
+        
+        <div class="mt-5 fade-in-up" data-delay="0.6s">
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <img src="https://via.placeholder.com/150x50/6e00ff/ffffff?text=Safaricom" class="img-fluid" alt="Safaricom">
+                <img src="https://via.placeholder.com/150x50/ff6b00/ffffff?text=M-Pesa" class="img-fluid" alt="M-Pesa">
+                <img src="https://via.placeholder.com/150x50/1a1a2e/ffffff?text=KBA" class="img-fluid" alt="KBA">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Animated circles background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="circle-1"></div>
+        <div class="circle-2"></div>
+        <div class="circle-3"></div>
+    </div>
+</div>
+
+<!-- Enhanced floating action button -->
+<div class="floating-action-btn">
+    <a href="#" class="btn btn-danger btn-lg rounded-circle p-3 shadow-lg">
+        <i class="bi bi-chat-dots-fill"></i>
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+    // Enhanced initialization with loading animation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hide loading animation after page loads
+        setTimeout(() => {
+            const loadingAnimation = document.getElementById('loadingAnimation');
+            if (loadingAnimation) {
+                loadingAnimation.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingAnimation.style.display = 'none';
+                }, 500);
+            }
+        }, 1000);
+
+        // Enhanced particles.js config with responsive adjustments
+        if (typeof particlesJS !== 'undefined') {
+            const isMobile = window.innerWidth <= 768;
+            particlesJS('particles-js', {
+                particles: {
+                    number: { 
+                        value: isMobile ? 30 : 80, 
+                        density: { enable: true, value_area: 800 } 
+                    },
+                    color: { value: "#6e00ff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: isMobile ? 2 : 3, random: true },
+                    line_linked: { 
+                        enable: !isMobile, 
+                        distance: 150, 
+                        color: "#6e00ff", 
+                        opacity: 0.4, 
+                        width: 1 
+                    },
+                    move: { 
+                        enable: true, 
+                        speed: isMobile ? 2 : 3, 
+                        direction: "none", 
+                        random: true, 
+                        straight: false, 
+                        out_mode: "out" 
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: !isMobile, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" }
+                    }
+                }
+            });
+        }
+
+        // Enhanced Typed.js for animated text
+        if (typeof Typed !== 'undefined') {
+            new Typed('.typed-text', {
+                strings: ['Complete kiosk management platform', 'Stock tracking with expiry alerts', 'M-Pesa integration & digital payments', 'Employee accountability & reporting', 'Cloud backup & offline sync', 'Multi-kiosk SaaS solution'],
+                typeSpeed: 50,
+                backSpeed: 30,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|',
+                smartBackspace: true,
+                onComplete: function() {
+                    // Add completion animation
+                    document.querySelector('.typed-text').classList.add('animate__animated', 'animate__pulse');
+                }
+            });
+        }
+
+        // Enhanced counter animation with intersection observer
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2000; // 2 seconds
+                    const step = target / (duration / 16); // 60fps
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += step;
+                        if (current < target) {
+                            counter.innerText = Math.floor(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target;
+                            counter.classList.add('animate');
+                        }
+                    };
+                    
+                    updateCounter();
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.counter').forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Enhanced scroll-triggered animations
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const delay = element.getAttribute('data-delay') || 0;
+                    
+                    setTimeout(() => {
+                        element.classList.add('animate');
+                    }, delay * 1000);
+                    
+                    animationObserver.unobserve(element);
+                }
+            });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Observe all animation elements
+        document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .scale-in').forEach(element => {
+            animationObserver.observe(element);
+        });
+
+        // Enhanced interactive elements
+        document.querySelectorAll('.elegant-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                this.style.transform = 'scale(1.2) rotate(10deg)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // Enhanced pain point cards interaction
+        document.querySelectorAll('.pain-point-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'perspective(1000px) rotateX(10deg) rotateY(10deg) translateY(-20px) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px)';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced scroll indicator
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                const statsSection = document.querySelector('.bg-dark');
+                if (statsSection) {
+                    statsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                const rate = scrolled * -0.5;
+                heroSection.style.transform = `translateY(${rate}px)`;
+            }
+        });
+
+        // Enhanced mobile menu toggle and click-outside-to-collapse
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        
+        if (navbarToggler) {
+            navbarToggler.classList.add('mobile-menu-toggle');
+            
+            // Remove outline on focus
+            navbarToggler.addEventListener('focus', function() {
+                this.style.outline = 'none';
+                this.style.boxShadow = 'none';
+            });
+        }
+        
+        // Click outside to collapse navbar
+        document.addEventListener('click', function(event) {
+            const isClickInsideNavbar = navbarCollapse && navbarCollapse.contains(event.target);
+            const isClickOnToggler = navbarToggler && navbarToggler.contains(event.target);
+            
+            if (navbarCollapse && navbarCollapse.classList.contains('show') && !isClickInsideNavbar && !isClickOnToggler) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                    toggle: false
+                });
+                bsCollapse.hide();
+            }
+        });
+
+        // Enhanced button hover effects
+        document.querySelectorAll('.btn-future').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Enhanced testimonial carousel (auto-play only, no controls)
+        const testimonialCarousel = document.getElementById('testimonialCarousel');
+        if (testimonialCarousel) {
+            const carousel = new bootstrap.Carousel(testimonialCarousel, {
+                interval: 5000,
+                pause: 'hover',
+                wrap: true
+            });
+        }
+
+        // Enhanced floating action button
+        const floatingBtn = document.querySelector('.floating-action-btn a');
+        if (floatingBtn) {
+            floatingBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.transform = 'scale(1.2) rotate(180deg)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        }
+
+        // Performance optimization: Throttle scroll events
+        let ticking = false;
+        function updateOnScroll() {
+            // Scroll-based animations here
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateOnScroll);
+                ticking = true;
+            }
+        });
+
+        // Enhanced responsive behavior
+        function handleResize() {
+            const isMobile = window.innerWidth <= 768;
+            const particlesContainer = document.getElementById('particles-js');
+            
+            if (particlesContainer) {
+                particlesContainer.style.display = isMobile ? 'none' : 'block';
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
+    });
+</script>
+{% endblock %}

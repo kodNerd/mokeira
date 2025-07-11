@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+<style>
+    .product-form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .form-header {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+    .form-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ced4da;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .form-control:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .btn-submit {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .form-header {
+            margin-bottom: 1.5rem;
+        }
+        .form-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .btn-submit, .btn-secondary {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .form-card {
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: none;
+            border: none;
+        }
+        .form-header {
+            font-size: 1.5rem;
+        }
+        .form-label {
+            font-size: 0.95rem;
+        }
+        .form-control {
+            padding: 0.65rem 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="product-form-container">
+        <div class="form-header">
+            <h2 class="fw-bold mb-0">{{ action }} Product</h2>
+        </div>
+        
+        <div class="form-card">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="product_name" 
+                               value="{{ stock.product_name|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="productType" class="form-label">Product Type (optional)</label>
+                        <input type="text" class="form-control" id="productType" name="product_type" 
+                               value="{{ stock.product_type|default:'' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="buyingPrice" class="form-label">Buying Price (KES)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">KES</span>
+                            <input type="number" class="form-control" id="buyingPrice" name="buying_price" 
+                                   min="0" step="0.01" value="{{ stock.buying_price|default:'' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="sellingPrice" class="form-label">Selling Price (KES)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">KES</span>
+                            <input type="number" class="form-control" id="sellingPrice" name="selling_price" 
+                                   min="0" step="0.01" value="{{ stock.selling_price|default:'' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" 
+                               min="1" value="{{ stock.quantity|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="expiryDate" class="form-label">Expiry Date (optional)</label>
+                        <input type="date" class="form-control" id="expiryDate" name="expiry_date" 
+                               value="{{ stock.expiry_date|default:'' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="supplier" class="form-label">Supplier (optional)</label>
+                        <input type="text" class="form-control" id="supplier" name="supplier" 
+                               value="{{ stock.supplier|default:'' }}">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="bi bi-check-lg"></i> {{ action }} Product
+                    </button>
+                    <a href="{% url 'pos:inventory' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
