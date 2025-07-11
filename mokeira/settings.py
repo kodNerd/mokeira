@@ -22,8 +22,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'clinicwisecare@gmail.com'
 EMAIL_HOST_PASSWORD =  'myyd ikqq spmr thlq'
 
-# Custom user model
-AUTH_USER_MODEL = 'app.CustomUser'
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
