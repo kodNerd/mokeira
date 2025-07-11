@@ -37,7 +37,7 @@ SOCIAL_AUTH_PIPELINE = [
     'social_core.pipeline.social_auth.social_user',
     
     # Your custom check
-    'app.pipeline.raise_auth_denied_if_no_user',
+    'pos.pipeline.raise_auth_denied_if_no_user',
 
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
